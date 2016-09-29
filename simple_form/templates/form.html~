@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title> Form </title>
+  </head>
+  <body>
+    here's a form
+    <form action="authenticate">
+      <input type="text", name="txt">
+      <input type="submit">
+    </form>
+    kool
+  </body>
+</html>
