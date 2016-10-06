@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request#look at data in request
+from flask import Flask, render_template, request, url_for,redirect#look at data in request
 import hashlib
 USERS = {}
 def readfile():
@@ -14,7 +14,7 @@ readfile()
 def hey():
     print request
     print request.headers
-    return(render_template('form.html'))
+    return(render_template('form.html', route = url_for('regg')))
 @app.route("/authenticate/", methods=["POST"])
 def aut():
     readfile()
@@ -23,7 +23,7 @@ def aut():
     if (u in USERS.keys()) and (USERS[u] == str(hashlib.md5(n).hexdigest())):
         return ('youre in<p>' + u + ' is your name &' + n + ' is your password')
     else:
-        return render_template("no.html")
+        return redirect(url_for('regg'))
 @app.route("/reg/register/", methods = ["POST"])
 def reg():
     u= request.form['user']
@@ -31,10 +31,12 @@ def reg():
     a = open("data/names.csv", "r+")
     x = a.read()
     #x = x + ("\n" + u + "," + n)
-    a.write("\n"+ u + "," + str(hashlib.md5(n).hexdigest()))
-    a.close()
-    return ("<a href=\"http://127.0.0.1:5000/\"> continue </a>")
-    
+    if(u not in USERS.keys()):
+        a.write("\n"+ u + "," + str(hashlib.md5(n).hexdigest()))
+        a.close()
+        return (redirect(url_for('hey')) )
+    else:
+        return ('name taken')
 @app.route("/reg/")
 def regg():
     return render_template('register.html')
