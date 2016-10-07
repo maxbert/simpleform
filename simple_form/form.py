@@ -14,17 +14,25 @@ readfile()
 def hey():
     print request
     print request.headers
-    return(render_template('form.html', route = url_for('regg')))
+    return(render_template('form.html'))
 @app.route("/authenticate/", methods=["POST"])
+def check():
+    if "login" in request.form:
+            return(aut())
+    else:
+        return((reg()))
+
+    
 def aut():
     readfile()
     u= request.form['user']
     n= request.form['pass']
     if (u in USERS.keys()) and (USERS[u] == str(hashlib.md5(n).hexdigest())):
-        return ('youre in<p>' + u + ' is your name &' + n + ' is your password')
+        session[user] = u
+        return (redirect(url_for('ine')))
     else:
-        return redirect(url_for('regg'))
-@app.route("/reg/register/", methods = ["POST"])
+        return ("incorrect")
+
 def reg():
     u= request.form['user']
     n= request.form['pass']
@@ -37,10 +45,16 @@ def reg():
         return (redirect(url_for('hey')) )
     else:
         return ('name taken')
-@app.route("/reg/")
-def regg():
-    return render_template('register.html')
+
 
 if __name__ == "__main__":
     app.debug = True
     app.run()
+@app.route("/ine/")
+def ine():
+    if user in session.keys():
+        return('in')
+    else:
+        return('out')
+           
+        
